@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your projects</title>
+</head>
+<body>
+    <div th:if="${projects.isEmpty()}">
+        <h3>You have no projects</h3>
+    </div>
+
+    <div th:if="${!projects.isEmpty()}">
+        <h3>Your projects:</h3>
+        <p th:each="project : ${projects}">
+            <a th:href="@{/projects/{id}(id = ${project.getId()})}" th:text="${project.getName()}">project</a>
+        </p>
+    </div>
+
+    <a th:href="@{/projects/new}"><button>Create</button></a>
+</body>
+</html>

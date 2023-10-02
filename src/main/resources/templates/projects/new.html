@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New project</title>
+</head>
+<body>
+    <form th:method="POST" th:action="@{/projects}" th:object="${project}">
+        <label for="name">Enter name:</label>
+        <input type="text" id="name" th:field="*{name}">
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red">
+            Name error
+        </div>
+        <br>
+
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>
