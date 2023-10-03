@@ -5,12 +5,18 @@
     <title>Project</title>
 </head>
 <body>
+    <a th:href="@{/projects}"><button>All projects</button></a>
+
     <div th:if="${project} == null">
         <h1>No project with such ID!</h1>
     </div>
 
     <div th:if="${project} != null">
         <h2 th:text="${project.getName()}">name</h2>
+
+        <div th:each="task : ${project.getTasks()}">
+            <p><a th:text="${task.getName()}" th:href="@{/tasks/{id}(id = ${task.getId()})}"></a></p>
+        </div>
 
         <br>
         <form th:method="DELETE" th:action="@{/projects/{id}(id=${project.getId()})}">

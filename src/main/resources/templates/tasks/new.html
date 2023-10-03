@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New task</title>
+</head>
+<body>
+    <form th:method="POST" th:action="@{/tasks}" th:object="${task}">
+        <label for="name">Enter name:</label>
+        <br>
+        <input type="text" id="name" th:field="*{name}">
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red">
+            Name error
+        </div>
+        <br>
+
+        <label for="description">Enter description:</label>
+        <br>
+        <input type="text" id="description" th:field="*{description}">
+        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color: red">
+            Description error
+        </div>
+        <br>
+
+        <label for="date">Enter expiring date (dd/MM/yyyy HH:mm):</label>
+        <br>
+        <input type="text" id="date" th:field="*{expiringDate}">
+        <div th:if="${#fields.hasErrors('expiringDate')}" th:errors="*{expiringDate}" style="color: red">
+            Date error
+        </div>
+        <br>
+
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>

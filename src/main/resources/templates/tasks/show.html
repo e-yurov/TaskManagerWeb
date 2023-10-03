@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task</title>
+</head>
+<body>
+    <div th:if="${task} == null">
+        <h1>No task with such ID!</h1>
+    </div>
+
+    <div th:if="${task} != null">
+        <h2 th:text="${task.getName()}">Name</h2>
+        <h3 th:text="${task.getDescription()}">Description</h3>
+        <p th:text="'Expires on ' + ${task.getFormattedExpiringDate()}">date</p>
+    </div>
+</body>
+</html>

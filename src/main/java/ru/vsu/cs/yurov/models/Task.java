@@ -2,9 +2,14 @@ package ru.vsu.cs.yurov.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Entity
@@ -16,7 +21,6 @@ public class Task {
     private int id;
 
     @Column(name = "name")
-    @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 50, message = "Name length should be between 2 and 50")
     private String name;
 
@@ -26,7 +30,7 @@ public class Task {
 
     @Column(name = "expiring_date")
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private Date expiringDate;
 
     @ManyToOne(targetEntity = Project.class)
@@ -67,6 +71,11 @@ public class Task {
 
     public Date getExpiringDate() {
         return expiringDate;
+    }
+
+    public String getFormattedExpiringDate() {
+        //return expiringDate.format(DateTimeFormatter.ofPattern("d/MM/yyyy hh:mm"));
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(expiringDate);
     }
 
     public void setExpiringDate(Date expiringDate) {
