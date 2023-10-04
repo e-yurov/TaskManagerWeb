@@ -12,8 +12,16 @@
     <div th:if="${!tasks.isEmpty()}">
         <h3>Your tasks:</h3>
         <p th:each="task : ${tasks}">
-            <a th:href="@{/tasks/{id}(id = ${task.getId()})}" th:text="${task.getName()}">task</a>
+            <a th:href="@{/tasks/{id}(id = ${task.getId()})}" th:text="${task.getName()}">task</a> -
+            <a th:if="${task.getProject()}" th:text="${task.getProject().getName()}"
+               th:href="@{/projects/{id}(id = ${task.getProject().getId()})}" ></a>
+            <span th:if="${task.getProject() == null}"> No project</span>
         </p>
     </div>
+
+    <a th:href="@{tasks/new}"><button>Create</button></a>
+    <br>
+    <hr>
+    <a th:href="@{/projects}"><button>Projects</button></a>
 </body>
 </html>

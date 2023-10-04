@@ -30,6 +30,15 @@
         </div>
         <br>
 
+        <label for="project">Choose project:</label>
+        <br>
+        <select name="projectId" id="project">
+            <option value="-1">No project</option>
+            <option th:each="project: ${projects}" th:text="${project.getName()}" th:value="${project.getId()}">
+                Project name
+            </option>
+        </select>
+
         <button type="submit">Create</button>
     </form>
 </body>

@@ -5,6 +5,8 @@
     <title>Task</title>
 </head>
 <body>
+    <a th:href="@{/tasks}"><button>All tasks</button></a>
+
     <div th:if="${task} == null">
         <h1>No task with such ID!</h1>
     </div>
@@ -12,7 +14,18 @@
     <div th:if="${task} != null">
         <h2 th:text="${task.getName()}">Name</h2>
         <h3 th:text="${task.getDescription()}">Description</h3>
+        <div th:if="${task.getProject()}">
+            <h4>Project: <a th:text="${task.getProject().getName()}"
+                            th:href="@{/projects/{id}(id = ${task.getProject().getId()})}"></a></h4>
+        </div>
+
         <p th:text="'Expires on ' + ${task.getFormattedExpiringDate()}">date</p>
+        <p th:text="${task.isExpired()} ? 'This task is expired!': ${leftHours}"
+           th:style="${task.isExpiringSoon()} ? 'color: red'"></p>
+
+        <form th:method="DELETE" th:action="@{/tasks/{id}(id = ${task.getId()})}">
+            <button type="submit">Delete</button>
+        </form>
     </div>
 </body>
 </html>

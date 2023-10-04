@@ -11,11 +11,11 @@ import ru.vsu.cs.yurov.services.ProjectsService;
 
 @Controller
 @RequestMapping("/projects")
-public class TaskManagerController {
+public class ProjectsController {
     private final ProjectsService projectsService;
 
     @Autowired
-    public TaskManagerController(ProjectsService projectsService) {
+    public ProjectsController(ProjectsService projectsService) {
         this.projectsService = projectsService;
     }
 

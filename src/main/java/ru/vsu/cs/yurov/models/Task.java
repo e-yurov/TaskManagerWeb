@@ -7,7 +7,9 @@ import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -25,7 +27,7 @@ public class Task {
     private String name;
 
     @Column(name = "description")
-    @Size(min = 2, max = 300, message = "Description length should be between 2 and 300")
+    @Size(max = 200, message = "Description length should not exceed 200")
     private String description;
 
     @Column(name = "expiring_date")
@@ -36,6 +38,12 @@ public class Task {
     @ManyToOne(targetEntity = Project.class)
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
+
+    @Transient
+    private boolean isExpired;
+
+    @Transient
+    private boolean isExpiringSoon;
 
     public Task() {}
 
@@ -88,5 +96,21 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public boolean isExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(boolean expired) {
+        isExpired = expired;
+    }
+
+    public boolean isExpiringSoon() {
+        return isExpiringSoon;
+    }
+
+    public void setExpiringSoon(boolean expiringSoon) {
+        isExpiringSoon = expiringSoon;
     }
 }

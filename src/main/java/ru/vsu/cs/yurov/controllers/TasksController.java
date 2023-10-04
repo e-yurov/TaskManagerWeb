@@ -22,12 +22,6 @@ public class TasksController {
         this.tasksService = tasksService;
     }
 
-    /*@GetMapping
-    public String test(@PathVariable int projectId, Model model) {
-        model.addAttribute("project", projectsService.getById(projectId));
-        return "tasks/index";
-    }*/
-
     @GetMapping
     public String index(Model model) {
         model.addAttribute("tasks", tasksService.getAll());
@@ -36,22 +30,33 @@ public class TasksController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable int id, Model model) {
-        model.addAttribute("task", tasksService.getById(id));
+        Task task = tasksService.getById(id);
+        model.addAttribute("task", task);
+        model.addAttribute("leftHours", tasksService.calculateLeftHours(task));
         return "tasks/show";
     }
 
     @GetMapping("/new")
-    public String newTask(@ModelAttribute("task") Task task) {
+    public String newTask(@ModelAttribute("task") Task task, Model model) {
+        model.addAttribute("projects", projectsService.getAll());
         return "tasks/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("task") @Valid Task task, BindingResult bindingResult) {
+    public String create(@RequestParam("projectId") Integer projectId,
+                         @ModelAttribute("task") @Valid Task task, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "tasks/new";
         }
 
-        tasksService.save(task);
+        tasksService.save(task, projectId);
+        return "redirect:/tasks";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable int id) {
+        tasksService.delete(id);
+
         return "redirect:/tasks";
     }
 }
