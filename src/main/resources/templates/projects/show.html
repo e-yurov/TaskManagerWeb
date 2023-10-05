@@ -15,12 +15,22 @@
         <h2 th:text="${project.getName()}">name</h2>
 
         <div th:each="task : ${project.getTasks()}">
-            <p><a th:text="${task.getName()}" th:href="@{/tasks/{id}(id = ${task.getId()})}"></a></p>
+            <a th:text="${task.getName()}" th:href="@{/tasks/{id}(id = ${task.getId()})}"></a>
+            <form th:method="DELETE" th:action="@{/tasks/{id}(id = ${task.getId()})}">
+                <input type="hidden" name="redirectTo" value="projects">
+                <input type="hidden" name="projectId" th:value="${project.getId()}">
+                <button type="submit">Delete task</button>
+            </form>
+            <br>
         </div>
+        <hr>
 
+        <a th:href="@{/projects/{id}/edit(id = ${project.getId()})}"><button>Edit project</button></a>
         <br>
+        <br>
+
         <form th:method="DELETE" th:action="@{/projects/{id}(id=${project.getId()})}">
-            <button type="submit">Delete</button>
+            <button type="submit">Delete project</button>
         </form>
     </div>
 </body>

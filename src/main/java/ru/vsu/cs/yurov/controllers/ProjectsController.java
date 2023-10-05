@@ -52,4 +52,21 @@ public class ProjectsController {
         projectsService.delete(id);
         return "redirect:/projects";
     }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") int id, Model model) {
+        model.addAttribute("project", projectsService.getById(id));
+        return "projects/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@PathVariable("id") int id,
+                         @ModelAttribute("project") @Valid Project project, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "projects/edit";
+        }
+
+        projectsService.update(id, project);
+        return "redirect:/projects/" + id;
+    }
 }

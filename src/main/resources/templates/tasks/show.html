@@ -23,8 +23,16 @@
         <p th:text="${task.isExpired()} ? 'This task is expired!': ${leftHours}"
            th:style="${task.isExpiringSoon()} ? 'color: red'"></p>
 
+        <br>
+        <hr>
+
+        <a th:href="@{/tasks/{id}/edit(id = ${task.getId()})}"><button>Edit task</button></a>
+        <br>
+        <br>
+
         <form th:method="DELETE" th:action="@{/tasks/{id}(id = ${task.getId()})}">
-            <button type="submit">Delete</button>
+            <input type="hidden" name="redirectTo" value="tasks">
+            <button type="submit">Delete task</button>
         </form>
     </div>
 </body>

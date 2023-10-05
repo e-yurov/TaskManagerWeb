@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New task</title>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/tasks/{id}(id = ${task.getId()})}" th:object="${task}">
+    <label for="name">Enter name:</label>
+    <br>
+    <input type="text" id="name" th:field="*{name}" th:value="*{name}">
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red">
+        Name error
+    </div>
+    <br>
+
+    <label for="description">Enter description:</label>
+    <br>
+    <input type="text" id="description" th:field="*{description}" th:value="*{description}">
+    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color: red">
+        Description error
+    </div>
+    <br>
+
+    <label for="date">Enter expiring date (dd/MM/yyyy HH:mm):</label>
+    <br>
+    <input type="text" id="date" th:field="*{expiringDate}" th:value="${task.getFormattedExpiringDate()}">
+    <div th:if="${#fields.hasErrors('expiringDate')}" th:errors="*{expiringDate}" style="color: red">
+        Date error
+    </div>
+    <br>
+
+    <label for="project">Choose project:</label>
+    <br>
+    <select name="projectId" id="project">
+        <option value="-1">No project</option>
+        <option th:each="project: ${projects}" th:text="${project.getName()}" th:value="${project.getId()}">
+            Project name
+        </option>
+    </select>
+    <br>
+    <hr>
+
+    <button type="submit">Create</button>
+</form>
+</body>
+</html>

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.vsu.cs.yurov.models.Project;
 import ru.vsu.cs.yurov.models.Task;
 import ru.vsu.cs.yurov.services.ProjectsService;
 import ru.vsu.cs.yurov.services.TasksService;
@@ -32,7 +33,7 @@ public class TasksController {
     public String show(@PathVariable int id, Model model) {
         Task task = tasksService.getById(id);
         model.addAttribute("task", task);
-        model.addAttribute("leftHours", tasksService.calculateLeftHours(task));
+        model.addAttribute("leftHours", tasksService.calculateLeftTime(task));
         return "tasks/show";
     }
 
@@ -43,7 +44,7 @@ public class TasksController {
     }
 
     @PostMapping
-    public String create(@RequestParam("projectId") Integer projectId,
+    public String create(@RequestParam("projectId") int projectId,
                          @ModelAttribute("task") @Valid Task task, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "tasks/new";
@@ -54,9 +55,32 @@ public class TasksController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@RequestParam(name = "projectId", required = false) String projectId,
+                         @RequestParam("redirectTo") String redirectTo,
+                         @PathVariable int id) {
         tasksService.delete(id);
+        String result = "redirect:/" + redirectTo;
+        if (redirectTo.equals("projects")) {
+            result += "/" + projectId;
+        }
+        return result;
+    }
 
-        return "redirect:/tasks";
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") int id, Model model) {
+        model.addAttribute("task", tasksService.getById(id));
+        model.addAttribute("projects", projectsService.getAll());
+        return "tasks/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("projectId") int projectId,
+                         @ModelAttribute("task") @Valid Task task, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "tasks/edit";
+        }
+
+        tasksService.update(id, task, projectId);
+        return "redirect:/tasks/" + id;
     }
 }

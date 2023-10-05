@@ -8,7 +8,6 @@ import ru.vsu.cs.yurov.models.Task;
 import ru.vsu.cs.yurov.repositories.ProjectsRepository;
 import ru.vsu.cs.yurov.repositories.TasksRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
@@ -49,11 +48,22 @@ public class TasksService {
     }
 
     @Transactional
-    public void update(int id, Task updatedTask) {
-        Task taskToBeUpdated = tasksRepository.findById(id).get();
+    public void update(int taskToBeUpdatedId, Task updatedTask, int projectId) {
+        Task taskToBeUpdated = tasksRepository.findById(taskToBeUpdatedId).get();
 
-        updatedTask.setProject(taskToBeUpdated.getProject());
-        updatedTask.setId(id);
+        Project prevProject = taskToBeUpdated.getProject();
+        if (prevProject != null) {
+            prevProject.getTasks().remove(updatedTask);
+        }
+
+        if (projectId == -1) {
+            updatedTask.setProject(null);
+        } else {
+            Project project = projectsRepository.findById(projectId).get();
+            updatedTask.setProject(project);
+            updatedTask.setId(taskToBeUpdatedId);
+            project.getTasks().add(updatedTask);
+        }
         tasksRepository.save(updatedTask);
     }
 
@@ -62,14 +72,7 @@ public class TasksService {
         tasksRepository.deleteById(id);
     }
 
-    public String calculateLeftHours(Task task) {
-        /*long millisecondsLeft = task.getExpiringDate().getTime() - new Date().getTime();
-        task.setExpired(millisecondsLeft <= 0);
-
-        Date timeLeft = new Date(millisecondsLeft);
-
-
-        return (int) (millisecondsLeft / 3_600_000L);*/
+    public String calculateLeftTime(Task task) {
         LocalDateTime expiringDateTime = LocalDateTime.ofInstant(
                 task.getExpiringDate().toInstant(), ZoneId.systemDefault());
         LocalDateTime now = LocalDateTime.now();
