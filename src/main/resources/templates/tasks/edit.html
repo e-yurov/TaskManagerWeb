@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New task</title>
+    <title>Edit task</title>
 </head>
 <body>
 <form th:method="PATCH" th:action="@{/tasks/{id}(id = ${task.getId()})}" th:object="${task}">
